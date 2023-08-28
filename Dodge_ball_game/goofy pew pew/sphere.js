@@ -11,7 +11,7 @@ class Sphere {
 
     update(cameraPosX, cameraPosZ) {
         this.rapidlyApproachingZ += this.speed;
-        if (this.rapidlyApproachingZ > cameraPosZ + 100) {
+        if (this.rapidlyApproachingZ > cameraPosZ) {
             this.rapidlyApproachingZ = -100;
             this.xPos = cameraPosX;
             this.sphereScore += 1;

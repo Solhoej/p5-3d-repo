@@ -1,13 +1,19 @@
+//Kamera kontrol
 let right = false;
 let left = false;
 let posX = 0;
 let posY = 150;
 let posZ = 400;
 let Speed = 15;
+
+//Variablerne der bruges til kontrol af kuglen og health
 let sphereTexture;
 let spheres = [];
 let healthPoints = 3;
 let healthLoss = true;
+let playHurtSound = true;
+
+//Variablerne til respawn systemet
 let respawnX = 77;
 let respawnY = 382;
 let respawnWidth = 458;
@@ -21,6 +27,7 @@ function preload() {
   sphereTexture = loadImage('assets/bigpurpleball.png');
   deathMessage = loadImage('assets/minecraftded.png');
   floorTexture = loadImage('assets/grass.jpg');
+  hurtSound = loadSound('assets/hurt.mp3');
 }
 
 function setup() {
@@ -57,23 +64,38 @@ function draw() {
   console.log(healthPoints);
 }
 
+function PlaneGenerator(xRotation, yRotation, zRotation, positionZ, textures) {
+  push();
+  rotateX(xRotation);
+  rotateY(yRotation);
+  rotateZ(zRotation);
+  translate(0, 0, positionZ);
+  texture(textures);
+  plane(850, 400);
+  pop();
+}
+
 // Koden der styrer funktionen, der laver kuglerne
 function SphereCode() {
   for (let sphere of spheres) {
     sphere.update(posX, posZ);
     sphere.display(sphereTexture);
 
+    //Trækker x og z positionerne og mængden af kugler undviget fra min class
     let sphereXPos = sphere.xPos;
     let sphereZPos = sphere.rapidlyApproachingZ;
     score = sphere.sphereScore;
-    // console.log('posX: ' + posX);
-    // console.log('posZ: ' + posZ);
-    // console.log('sphereXPos: ' + sphereXPos);
-    // console.log('sphereZPos: ' + sphereZPos);
+
      if (dist(posX, posZ, sphereXPos, sphereZPos) < 10 && healthLoss) {
       healthPoints -= 1;
       healthLoss = false;
-    } else {
+      if (playHurtSound) {
+        hurtSound.play();
+        playHurtSound = false;
+      } else {
+        playHurtSound = true;
+      }
+     } else {
       healthLoss = true;
     }
   }
@@ -106,17 +128,6 @@ function mousePressed() {
     healthPoints = 3;
     sphere.respawn();
   }
-}
-
-function PlaneGenerator(xRotation, yRotation, zRotation, positionZ, textures) {
-  push();
-  rotateX(xRotation);
-  rotateY(yRotation);
-  rotateZ(zRotation);
-  translate(0, 0, positionZ);
-  texture(textures);
-  plane(850, 400);
-  pop();
 }
 
 function keyPressed() {
